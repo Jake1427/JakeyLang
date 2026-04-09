@@ -2,23 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>JLang IDE</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to JakeyLang</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="welcome-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h1>Welcome to JakeyLang!</h1>
+            <p>Your code editor and AI assistant platform.</p>
+        </div>
+    </div>
 
-<canvas id="snow"></canvas>
+    <div id="main-interface">
+        <div id="code-editor" class="panel">
+            <h2>Code Editor</h2>
+            <textarea id="code-input" placeholder="Write your code here..."></textarea>
+        </div>
 
-<div class="container">
-    <h1>❄️ JLang Web IDE</h1>
+        <div id="ai-assistant" class="panel">
+            <h2>AI Assistant</h2>
+            <div id="assistant-output">AI responses will appear here...</div>
+        </div>
 
-    <textarea id="code" placeholder="Write your JLang code here..."></textarea>
+        <div id="output-panel" class="panel">
+            <h2>Output</h2>
+            <div id="output-content">Output will be displayed here...</div>
+        </div>
+    </div>
 
-    <button onclick="runCode()">▶ Run</button>
-
-    <div id="output"></div>
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
