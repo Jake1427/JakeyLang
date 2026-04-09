@@ -1,79 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JLang IDE</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JLang IDE</title>
+
+<style>
+/* VS Code Color Palette */
+:root {
+    --bg-main: #1e1e1e;
+    --bg-sidebar: #252526;
+    --bg-topbar: #323233;
+    --border: #3c3c3c;
+    --text-main: #cccccc;
+    --text-editor: #9cdcfe;
+    --text-terminal: #4ec9b0;
+    --accent: #0e639c;
+    --accent-hover: #1177bb;
+    --stop-btn: #e81123;
+    --stop-hover: #f73141;
+}
+
+body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', Tahoma, sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+/* TOP BAR */
+#top-bar { background: var(--bg-topbar); padding: 8px 15px; display: flex; gap: 10px; border-bottom: 1px solid var(--border); }
+button { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 13px; transition: background 0.2s; }
+button:hover { background: var(--accent-hover); }
+#stop-btn { background: var(--stop-btn); display: none; }
+#stop-btn:hover { background: var(--stop-hover); }
+.icon-btn { padding: 6px 10px; font-weight: bold; background: #4d4d4d; }
+.icon-btn:hover { background: #666666; }
+
+/* MAIN LAYOUT */
+#main-layout { display: flex; flex: 1; overflow: hidden; position: relative; }
+.panel-title { text-transform: uppercase; font-size: 11px; padding: 10px 15px; color: #969696; letter-spacing: 1px; background: var(--bg-sidebar); border-bottom: 1px solid var(--border); user-select: none; }
+
+/* SIDEBARS & PANELS */
+#sidebar { width: 250px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+#sidebar.hidden { display: none; }
+.ai-content { padding: 15px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+#aiInput { background: var(--bg-main); border: 1px solid var(--border); color: white; padding: 8px; border-radius: 3px; outline: none; }
+#aiInput:focus { border-color: var(--accent); }
+#aiOutput { flex: 1; font-size: 13px; color: #dcdcaa; margin-top: 10px; }
+
+#center-col { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+#editor-container { flex: 2; display: flex; flex-direction: column; border-bottom: 1px solid var(--border); }
+#editor { flex: 1; background: var(--bg-main); color: var(--text-editor); font-family: 'Consolas', monospace; font-size: 15px; padding: 15px; outline: none; white-space: pre-wrap; overflow-y: auto; }
+#terminal-container { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); }
+#output { flex: 1; padding: 10px 15px; font-family: 'Consolas', monospace; font-size: 14px; overflow-y: auto; color: var(--text-terminal); }
+
+#right-col { width: 350px; background: var(--bg-sidebar); border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+#game-container { flex: 1; padding: 15px; display: flex; align-items: flex-start; justify-content: center; }
+#gameCanvas { background: black; border: 1px solid var(--border); max-width: 100%; }
+
+/* MODALS */
+.modal { display: none; position: absolute; background: var(--bg-sidebar); border: 1px solid var(--border); box-shadow: 0 5px 20px rgba(0,0,0,0.6); z-index: 100; flex-direction: column; }
+.modal-header { background: var(--bg-topbar); padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); cursor: move; user-select: none; font-size: 12px; font-weight: bold; }
+.modal-body { padding: 15px; overflow-y: auto; flex: 1; font-size: 14px; }
+#help-modal { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; max-height: 80vh; }
+#help-modal ul { line-height: 1.8; color: var(--text-main); list-style-type: none; padding-left: 0;}
+#help-modal li { margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+#help-modal code { color: var(--text-editor); background: var(--bg-main); padding: 2px 5px; border-radius: 3px; font-weight: bold; }
+#user-gui { top: 20%; left: 30%; width: 300px; min-height: 150px; }
+.window-controls button { background: transparent; border: 1px solid transparent; color: #969696; padding: 2px 6px; margin-left: 2px; }
+.window-controls button:hover { background: #4d4d4d; color: white; }
+.window-controls .close-btn:hover { background: #e81123; }
+</style>
 </head>
+
 <body>
 
-<!-- ❄️ Snow Background -->
-<canvas id="snow"></canvas>
-
-<!-- 🔥 WELCOME MODAL -->
-<div id="welcome-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h1>Welcome to JLang</h1>
-        <p>Simple coding for everyone. Build GUIs, games, and websites easily.</p>
-    </div>
-</div>
-
-<!-- 🔝 TOP BAR -->
 <div id="top-bar">
-    <button onclick="runCode()">▶ Run</button>
-    <button onclick="shareCode()">🔗 Share</button>
-    <input id="search" placeholder="Search commands..." oninput="searchDocs()">
+    <button id="run-btn" onclick="executeJLang()">▶ Run</button>
+    <button id="stop-btn" onclick="stopJLang()">⏹ Stop</button>
+    <button onclick="saveFile()">💾 Save</button>
+    <button onclick="loadFile()">📂 Open</button>
+    <button onclick="compile()">⚙️ Compile to App</button>
+    <button onclick="toggleAI()">🤖 Toggle AI</button>
+    <button onclick="toggleHelp()" class="icon-btn">❓</button>
 </div>
 
-<!-- 🖥️ MAIN IDE -->
-<div id="main-interface">
-
-    <!-- 🧠 CODE EDITOR -->
-    <div id="code-editor" class="panel">
-        <h2>Code</h2>
-        <textarea id="code-input" spellcheck="false" placeholder='say "Hello World"'></textarea>
+<div id="main-layout">
+    <div id="sidebar" class="hidden">
+        <div class="panel-title">AI Assistant</div>
+        <div class="ai-content">
+            <input id="aiInput" placeholder="Ask AI how to code...">
+            <button onclick="askAI()">Ask</button>
+            <div id="aiOutput"></div>
+        </div>
     </div>
 
-    <!-- 🤖 AI + SEARCH -->
-    <div id="ai-assistant" class="panel">
-        <h2>AI Assistant</h2>
-
-        <input id="aiInput" placeholder="Ask something like 'how to use character'">
-        <button onclick="askAI()">Ask</button>
-
-        <div id="assistant-output"></div>
-
-        <h3>Search Results</h3>
-        <div id="searchResult"></div>
+    <div id="center-col">
+        <div id="editor-container">
+            <div class="panel-title">main.jlang</div>
+            <div id="editor" contenteditable="true" spellcheck="false">add gui
+create button
+button text "Click me!"
+say "Wait 2 seconds..."
+wait = 2000
+say "Done!"
+repeat = 3</div>
+        </div>
+        
+        <div id="terminal-container">
+            <div class="panel-title">Terminal</div>
+            <div id="output"></div>
+        </div>
     </div>
 
-    <!-- 📟 OUTPUT -->
-    <div id="output-panel" class="panel">
-        <h2>Output</h2>
-        <div id="output-content"></div>
+    <div id="right-col">
+        <div class="panel-title">2D Game Engine</div>
+        <div id="game-container">
+            <canvas id="gameCanvas"></canvas>
+        </div>
     </div>
 
+    <div id="help-modal" class="modal">
+        <div class="modal-header" id="help-header">
+            <span>JLang Documentation (Auto-Updated)</span>
+            <div class="window-controls"><button class="close-btn" onclick="toggleHelp()">X</button></div>
+        </div>
+        <div class="modal-body">
+            <h3>Available Commands</h3>
+            <ul id="docs-list">Loading documentation...</ul>
+        </div>
+    </div>
+
+    <div id="user-gui" class="modal">
+        <div class="modal-header" id="gui-header">
+            <span>User Application</span>
+            <div class="window-controls">
+                <button onclick="minimizeGUI()">_</button>
+                <button class="close-btn" onclick="closeGUI()">X</button>
+            </div>
+        </div>
+        <div class="modal-body" id="user-gui-body"></div>
+    </div>
 </div>
 
-<script src="script.js"></script>
+<input type="file" id="fileLoader" hidden>
 
-<!-- 🧠 BASIC UI LOGIC -->
+<script src="syntax.js"></script>
+
 <script>
-// CLOSE MODAL
-document.querySelector(".close-button").onclick = () => {
-    document.getElementById("welcome-modal").style.display = "none";
-};
-
-// LOAD SHARED CODE
+// ===================
+// INITIALIZATION
+// ===================
 window.onload = () => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("code")) {
-        document.getElementById("code-input").value = atob(params.get("code"));
+    // Auto-generate documentation from syntax.js
+    const docsList = document.getElementById("docs-list");
+    if(window.JLang && window.JLang.commandDictionary) {
+        docsList.innerHTML = "";
+        window.JLang.commandDictionary.forEach(cmd => {
+            docsList.innerHTML += `<li><code>${cmd.syntax}</code> - ${cmd.desc}</li>`;
+        });
+    } else {
+        docsList.innerHTML = "<span style='color:red'>Error: syntax.js not found! Ensure it is in the same folder.</span>";
     }
 };
-</script>
 
+// ===================
+// EXECUTION BRIDGE
+// ===================
+async function executeJLang() {
+    if (!window.JLang) return alert("syntax.js is missing!");
+    
+    let code = document.getElementById("editor").innerText.split("\n");
+    let output = document.getElementById("output");
+    let guiBody = document.getElementById("user-gui-body");
+    
+    // UI Button Toggles
+    document.getElementById("run-btn").style.display = "none";
+    document.getElementById("stop-btn").style.display = "block";
+
+    // Pass the game API to the syntax engine
+    let gameAPI = {
+        start: startGame,
+        setSpeed: (s) => gameSpeed = s,
+        setColor: (c) => gameColor = c
+    };
+
+    await window.JLang.run(code, output, guiBody, gameAPI);
+    
+    // Restore Buttons after execution finishes
+    document.getElementById("run-btn").style.display = "block";
+    document.getElementById("stop-btn").style.display = "none";
+}
+
+function stopJLang() {
+    if (window.JLang) window.JLang.stopExecution();
+    document.getElementById("run-btn").style.display = "block";
+    document.getElementById("stop-btn").style.display = "none";
+}
+
+// ===================
+// DRAGGABLE WINDOW LOGIC
+// ===================
+function dragElement(elmnt, headerId) {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    document.getElementById(headerId).onmousedown = dragMouseDown;
+    function dragMouseDown(e) {
+        e.preventDefault();
+        pos3 = e.clientX; pos4 = e.clientY;
+        document.onmouseup = closeDragElement; document.onmousemove = elementDrag;
+    }
+    function elementDrag(e) {
+        e.preventDefault();
+        pos1 = pos3 - e.clientX; pos2 = pos4 - e.clientY;
+        pos3 = e.clientX; pos4 = e.clientY;
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    }
+    function closeDragElement() { document.onmouseup = null; document.onmousemove = null; }
+}
+dragElement(document.getElementById("help-modal"), "help-header");
+dragElement(document.getElementById("user-gui"), "gui-header");
+
+// ===================
+// UI CONTROLS
+// ===================
+function toggleHelp() {
+    let help = document.getElementById("help-modal");
+    help.style.display = help.style.display === "flex" ? "none" : "flex";
+}
+function closeGUI() { document.getElementById("user-gui").style.display = "none"; }
+function minimizeGUI() {
+    let body = document.getElementById("user-gui-body");
+    body.style.display = body.style.display === "none" ? "block" : "none";
+}
+function toggleAI() { document.getElementById("sidebar").classList.toggle("hidden"); }
+function askAI() { document.getElementById("aiOutput").innerText = "Check the ❓ icon for the new updated command list!"; }
+
+// ===================
+// FILE SYSTEM & COMPILER
+// ===================
+function saveFile() {
+    let blob = new Blob([document.getElementById("editor").innerText]);
+    let a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = "code.jlang"; a.click();
+}
+
+function loadFile() {
+    let input = document.getElementById("fileLoader");
+    input.click();
+    input.onchange = () => {
+        let reader = new FileReader();
+        reader.onload = () => document.getElementById("editor").innerText = reader.result;
+        reader.readAsText(input.files[0]);
+    };
+}
+
+function compile() {
+    alert("Compiler requires an update to bundle the new syntax.js file. Feature coming soon!");
+}
+
+// ===================
+// 2D GAME ENGINE
+// ===================
+let gameAnimationId;
+let gameSpeed = 2;
+let gameColor = "#4ec9b0";
+
+function startGame() {
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    if (gameAnimationId) cancelAnimationFrame(gameAnimationId);
+
+    canvas.width = 300; canvas.height = 200;
+    let x = 10;
+
+    function loop(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = gameColor; 
+        ctx.fillRect(x, 75, 50, 50);
+        x += gameSpeed;
+        if (x > canvas.width) x = -50;
+        gameAnimationId = requestAnimationFrame(loop);
+    }
+    loop();
+}
+</script>
 </body>
 </html>
