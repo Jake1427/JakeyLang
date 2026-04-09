@@ -3,35 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to JakeyLang</title>
+    <title>JLang IDE</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="welcome-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h1>Welcome to JakeyLang!</h1>
-            <p>Your code editor and AI assistant platform.</p>
-        </div>
+
+<!-- ❄️ Snow Background -->
+<canvas id="snow"></canvas>
+
+<!-- 🔥 WELCOME MODAL -->
+<div id="welcome-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h1>Welcome to JLang</h1>
+        <p>Simple coding for everyone. Build GUIs, games, and websites easily.</p>
+    </div>
+</div>
+
+<!-- 🔝 TOP BAR -->
+<div id="top-bar">
+    <button onclick="runCode()">▶ Run</button>
+    <button onclick="shareCode()">🔗 Share</button>
+    <input id="search" placeholder="Search commands..." oninput="searchDocs()">
+</div>
+
+<!-- 🖥️ MAIN IDE -->
+<div id="main-interface">
+
+    <!-- 🧠 CODE EDITOR -->
+    <div id="code-editor" class="panel">
+        <h2>Code</h2>
+        <textarea id="code-input" spellcheck="false" placeholder='say "Hello World"'></textarea>
     </div>
 
-    <div id="main-interface">
-        <div id="code-editor" class="panel">
-            <h2>Code Editor</h2>
-            <textarea id="code-input" placeholder="Write your code here..."></textarea>
-        </div>
+    <!-- 🤖 AI + SEARCH -->
+    <div id="ai-assistant" class="panel">
+        <h2>AI Assistant</h2>
 
-        <div id="ai-assistant" class="panel">
-            <h2>AI Assistant</h2>
-            <div id="assistant-output">AI responses will appear here...</div>
-        </div>
+        <input id="aiInput" placeholder="Ask something like 'how to use character'">
+        <button onclick="askAI()">Ask</button>
 
-        <div id="output-panel" class="panel">
-            <h2>Output</h2>
-            <div id="output-content">Output will be displayed here...</div>
-        </div>
+        <div id="assistant-output"></div>
+
+        <h3>Search Results</h3>
+        <div id="searchResult"></div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- 📟 OUTPUT -->
+    <div id="output-panel" class="panel">
+        <h2>Output</h2>
+        <div id="output-content"></div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+<!-- 🧠 BASIC UI LOGIC -->
+<script>
+// CLOSE MODAL
+document.querySelector(".close-button").onclick = () => {
+    document.getElementById("welcome-modal").style.display = "none";
+};
+
+// LOAD SHARED CODE
+window.onload = () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("code")) {
+        document.getElementById("code-input").value = atob(params.get("code"));
+    }
+};
+</script>
+
 </body>
 </html>
