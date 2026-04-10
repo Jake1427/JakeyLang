@@ -1,7 +1,7 @@
 // AiAssistant.js
 window.AiAssistant = (function() {
   const responses = [
-    { keywords: ['hello', 'hi', 'hey'], response: 'Hello! How can I help you with JLang?' },
+    { keywords: ['hello', 'hi', 'hey','heyo'], response: 'Hello! How can I help you with JLang?' },
     { keywords: ['say', 'print', 'output'], response: 'Use "say \"text\"" to print to the terminal.' },
     { keywords: ['variable', 'make', 'set'], response: 'Create a variable: make x = 5. Then you can use x in commands.' },
     { keywords: ['button', 'ui'], response: 'Create a button: create button "Click". Then handle click: on click button1 => say "clicked".' },
@@ -15,6 +15,9 @@ window.AiAssistant = (function() {
     { keywords: ['color', 'style'], response: 'Style UI: set text color "red", set bg color "#000", set font size 20.' },
     { keywords: ['event', 'on click', 'on hover'], response: 'Events: on click button1 => say "clicked", on load => say "ready", on interval 1000 => say "tick".' },
     { keywords: ['help', 'commands'], response: 'Check the ❓ icon for the full command list!' }
+    { keywords: ['Make cool code', 'I want to make cool code'], response: 'Right now my current version cannot support generating code for you.  Please refer to ❓ icon to see all listed commands.' },
+    { keywords: ['Nigger'], response: 'We do not use those words okay' }
+    
   ];
 
   function fuzzyMatch(query, keywords) {
