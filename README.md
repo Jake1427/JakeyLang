@@ -9,6 +9,7 @@ It’s designed to be **simple, readable, and interactive**, with built-in GUI, 
 
 - 🧠 Easy-to-learn custom syntax
 - 🖥️ Web-based IDE (HTML + JS)
+- 🖥️ Application IDE (Python Based)
 - 🎮 Built-in 2D mini game system
 - 🎛️ GUI elements (buttons, text, titles)
 - ⚡ Real-time interpreter (no compilation needed)
