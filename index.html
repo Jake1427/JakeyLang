@@ -21,64 +21,295 @@
     --stop-hover: #f73141;
 }
 
-body { margin: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', Tahoma, sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+body {
+    margin: 0;
+    background: var(--bg-main);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: var(--text-main);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color 0.2s;
+}
 
 /* TOP BAR */
-#top-bar { background: var(--bg-topbar); padding: 8px 15px; display: flex; gap: 10px; border-bottom: 1px solid var(--border); }
-button { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 13px; transition: background 0.2s; }
+#top-bar {
+    background: var(--bg-topbar);
+    padding: 8px 15px;
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s;
+}
 button:hover { background: var(--accent-hover); }
 #stop-btn { background: var(--stop-btn); display: none; }
 #stop-btn:hover { background: var(--stop-hover); }
-.icon-btn { padding: 6px 10px; font-weight: bold; background: #4d4d4d; }
+.icon-btn {
+    padding: 6px 10px;
+    font-weight: bold;
+    background: #4d4d4d;
+}
 .icon-btn:hover { background: #666666; }
+#clear-btn { background: #6c757d; }
+#clear-btn:hover { background: #5a6268; }
 
 /* MAIN LAYOUT */
-#main-layout { display: flex; flex: 1; overflow: hidden; position: relative; }
-.panel-title { text-transform: uppercase; font-size: 11px; padding: 10px 15px; color: #969696; letter-spacing: 1px; background: var(--bg-sidebar); border-bottom: 1px solid var(--border); user-select: none; }
+#main-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+.panel-title {
+    text-transform: uppercase;
+    font-size: 11px;
+    padding: 10px 15px;
+    color: #969696;
+    letter-spacing: 1px;
+    background: var(--bg-sidebar);
+    border-bottom: 1px solid var(--border);
+    user-select: none;
+}
 
 /* SIDEBARS & PANELS */
-#sidebar { width: 250px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+#sidebar {
+    width: 250px;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+}
 #sidebar.hidden { display: none; }
-.ai-content { padding: 15px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-#aiInput { background: var(--bg-main); border: 1px solid var(--border); color: white; padding: 8px; border-radius: 3px; outline: none; }
+.ai-content {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+#aiInput {
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    color: white;
+    padding: 8px;
+    border-radius: 3px;
+    outline: none;
+}
 #aiInput:focus { border-color: var(--accent); }
-#aiOutput { flex: 1; font-size: 13px; color: #dcdcaa; margin-top: 10px; }
+#aiOutput {
+    flex: 1;
+    font-size: 13px;
+    color: #dcdcaa;
+    margin-top: 10px;
+    overflow-y: auto;
+}
 
-#center-col { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
-#editor-container { flex: 2; display: flex; flex-direction: column; border-bottom: 1px solid var(--border); }
-#editor { flex: 1; background: var(--bg-main); color: var(--text-editor); font-family: 'Consolas', monospace; font-size: 15px; padding: 15px; outline: none; white-space: pre-wrap; overflow-y: auto; }
-#terminal-container { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); }
-#output { flex: 1; padding: 10px 15px; font-family: 'Consolas', monospace; font-size: 14px; overflow-y: auto; color: var(--text-terminal); }
+#center-col {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+#editor-container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid var(--border);
+}
+#editor {
+    flex: 1;
+    background: transparent;
+    color: var(--text-editor);
+    font-family: 'Consolas', monospace;
+    font-size: 15px;
+    padding: 15px;
+    outline: none;
+    white-space: pre-wrap;
+    overflow-y: auto;
+}
+#terminal-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-main);
+}
+#output {
+    flex: 1;
+    padding: 10px 15px;
+    font-family: 'Consolas', monospace;
+    font-size: 14px;
+    overflow-y: auto;
+    color: var(--text-terminal);
+}
 
-#right-col { width: 350px; background: var(--bg-sidebar); border-left: 1px solid var(--border); display: flex; flex-direction: column; }
-#game-container { flex: 1; padding: 15px; display: flex; align-items: flex-start; justify-content: center; }
-#gameCanvas { background: black; border: 1px solid var(--border); max-width: 100%; }
+#right-col {
+    width: 350px;
+    background: var(--bg-sidebar);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+}
+#game-container {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+#gameCanvas {
+    background: black;
+    border: 1px solid var(--border);
+    max-width: 100%;
+}
 
 /* MODALS */
-.modal { display: none; position: absolute; background: var(--bg-sidebar); border: 1px solid var(--border); box-shadow: 0 5px 20px rgba(0,0,0,0.6); z-index: 100; flex-direction: column; }
-.modal-header { background: var(--bg-topbar); padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); cursor: move; user-select: none; font-size: 12px; font-weight: bold; }
-.modal-body { padding: 15px; overflow-y: auto; flex: 1; font-size: 14px; }
-#help-modal { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; max-height: 80vh; }
-#help-modal ul { line-height: 1.8; color: var(--text-main); list-style-type: none; padding-left: 0;}
-#help-modal li { margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 8px; }
-#help-modal code { color: var(--text-editor); background: var(--bg-main); padding: 2px 5px; border-radius: 3px; font-weight: bold; }
-#user-gui { top: 20%; left: 30%; width: 300px; min-height: 150px; }
-.window-controls button { background: transparent; border: 1px solid transparent; color: #969696; padding: 2px 6px; margin-left: 2px; }
-.window-controls button:hover { background: #4d4d4d; color: white; }
-.window-controls .close-btn:hover { background: #e81123; }
+.modal {
+    display: none;
+    position: absolute;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+    z-index: 100;
+    flex-direction: column;
+}
+.modal-header {
+    background: var(--bg-topbar);
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    cursor: move;
+    user-select: none;
+    font-size: 12px;
+    font-weight: bold;
+}
+.modal-body {
+    padding: 15px;
+    overflow-y: auto;
+    flex: 1;
+    font-size: 14px;
+}
+#help-modal {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    max-height: 80vh;
+}
+#settings-modal {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    max-height: 80vh;
+}
+.settings-section {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #3c3c3c;
+    padding-bottom: 15px;
+}
+.settings-section h4 {
+    margin: 0 0 10px 0;
+    color: #e0e0e0;
+}
+.settings-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.settings-row label {
+    width: 140px;
+    font-size: 13px;
+}
+.settings-row select,
+.settings-row input[type="file"] {
+    flex: 1;
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    color: white;
+    padding: 6px;
+    border-radius: 3px;
+}
+.settings-row input[type="checkbox"] {
+    margin-right: 8px;
+}
+#help-modal ul {
+    line-height: 1.8;
+    color: var(--text-main);
+    list-style-type: none;
+    padding-left: 0;
+}
+#help-modal li {
+    margin-bottom: 8px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 8px;
+}
+#help-modal code {
+    color: var(--text-editor);
+    background: var(--bg-main);
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+#user-gui {
+    top: 20%;
+    left: 30%;
+    width: 300px;
+    min-height: 150px;
+}
+.window-controls button {
+    background: transparent;
+    border: 1px solid transparent;
+    color: #969696;
+    padding: 2px 6px;
+    margin-left: 2px;
+}
+.window-controls button:hover {
+    background: #4d4d4d;
+    color: white;
+}
+.window-controls .close-btn:hover {
+    background: #e81123;
+}
+/* Color preview dot */
+.color-preview {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    margin-left: 8px;
+    border: 1px solid #555;
+    vertical-align: middle;
+}
 </style>
 </head>
-
 <body>
 
 <div id="top-bar">
     <button id="run-btn" onclick="executeJLang()">▶ Run</button>
     <button id="stop-btn" onclick="stopJLang()">⏹ Stop</button>
+    <button id="clear-btn" onclick="clearAll()">🧹 Clear</button>
     <button onclick="saveFile()">💾 Save</button>
     <button onclick="loadFile()">📂 Open</button>
     <button onclick="compile()">⚙️ Compile to App</button>
     <button onclick="toggleAI()">🤖 Toggle AI</button>
     <button onclick="toggleHelp()" class="icon-btn">❓</button>
+    <button onclick="toggleSettings()" class="icon-btn">⚙️</button>
 </div>
 
 <div id="main-layout">
@@ -116,6 +347,7 @@ repeat = 3</div>
         </div>
     </div>
 
+    <!-- Help Modal -->
     <div id="help-modal" class="modal">
         <div class="modal-header" id="help-header">
             <span>JLang Documentation (Auto-Updated)</span>
@@ -127,6 +359,66 @@ repeat = 3</div>
         </div>
     </div>
 
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-header" id="settings-header">
+            <span>IDE Settings</span>
+            <div class="window-controls"><button class="close-btn" onclick="toggleSettings()">X</button></div>
+        </div>
+        <div class="modal-body">
+            <div class="settings-section">
+                <h4>Appearance</h4>
+                <div class="settings-row">
+                    <label>Editor Text Color:</label>
+                    <select id="text-color-select" onchange="applyTextColor(this.value)">
+                        <option value="#9cdcfe" selected>Default Blue</option>
+                        <option value="#ffffff">White</option>
+                        <option value="#ce9178">Orange</option>
+                        <option value="#6a9955">Green</option>
+                        <option value="#c586c0">Purple</option>
+                        <option value="#dcdcaa">Yellow</option>
+                        <option value="#f44747">Red</option>
+                    </select>
+                    <span class="color-preview" id="text-color-preview" style="background: #9cdcfe;"></span>
+                </div>
+                <div class="settings-row">
+                    <label>Background Color:</label>
+                    <select id="bg-color-select" onchange="applyBgColor(this.value)">
+                        <option value="#1e1e1e" selected>Default Dark</option>
+                        <option value="#0d1117">GitHub Dark</option>
+                        <option value="#282c34">One Dark</option>
+                        <option value="#2b2b2b">Dark Gray</option>
+                        <option value="#000000">Black</option>
+                        <option value="#ffffff">White</option>
+                    </select>
+                    <span class="color-preview" id="bg-color-preview" style="background: #1e1e1e;"></span>
+                </div>
+                <div class="settings-row">
+                    <label>Custom Background:</label>
+                    <input type="file" id="bg-image-upload" accept="image/png, image/jpeg" onchange="setCustomBackground(event)">
+                </div>
+                <div class="settings-row">
+                    <button onclick="resetBackground()" style="background:#4d4d4d;">Reset Background</button>
+                </div>
+            </div>
+            <div class="settings-section">
+                <h4>Editor</h4>
+                <div class="settings-row">
+                    <label>
+                        <input type="checkbox" id="syntax-toggle" checked onchange="toggleSyntaxHighlight()"> Syntax Highlighter
+                    </label>
+                </div>
+                <div class="settings-row">
+                    <label>
+                        <input type="checkbox" id="spellcheck-toggle" onchange="toggleSpellCheck()"> Underline Misspelled Words
+                    </label>
+                </div>
+            </div>
+            <p style="font-size:12px; color:#888; margin-top:10px;">Settings are applied immediately.</p>
+        </div>
+    </div>
+
+    <!-- User GUI Window -->
     <div id="user-gui" class="modal">
         <div class="modal-header" id="gui-header">
             <span>User Application</span>
@@ -142,7 +434,7 @@ repeat = 3</div>
 <input type="file" id="fileLoader" hidden>
 
 <script src="syntax.js"></script>
-
+<script src="AiAssistant.js"></script>
 <script>
 // ===================
 // INITIALIZATION
@@ -158,6 +450,11 @@ window.onload = () => {
     } else {
         docsList.innerHTML = "<span style='color:red'>Error: syntax.js not found! Ensure it is in the same folder.</span>";
     }
+
+    // Initialize settings UI state
+    document.getElementById('spellcheck-toggle').checked = false;
+    document.getElementById('editor').spellcheck = false;
+    // Syntax highlighter is on by default (editor uses --text-editor color)
 };
 
 // ===================
@@ -172,26 +469,35 @@ async function executeJLang() {
     
     // UI Button Toggles
     document.getElementById("run-btn").style.display = "none";
-    document.getElementById("stop-btn").style.display = "block";
+    document.getElementById("stop-btn").style.display = "inline-block";
 
     // Pass the game API to the syntax engine
     let gameAPI = {
         start: startGame,
         setSpeed: (s) => gameSpeed = s,
-        setColor: (c) => gameColor = c
+        setColor: (c) => gameColor = c,
+        movePlayer: (x,y) => { /* stub */ },
+        spawnEnemy: () => { /* stub */ },
+        detectCollision: () => false
     };
 
     await window.JLang.run(code, output, guiBody, gameAPI);
     
     // Restore Buttons after execution finishes
-    document.getElementById("run-btn").style.display = "block";
+    document.getElementById("run-btn").style.display = "inline-block";
     document.getElementById("stop-btn").style.display = "none";
 }
 
 function stopJLang() {
     if (window.JLang) window.JLang.stopExecution();
-    document.getElementById("run-btn").style.display = "block";
+    document.getElementById("run-btn").style.display = "inline-block";
     document.getElementById("stop-btn").style.display = "none";
+}
+
+function clearAll() {
+    document.getElementById("editor").innerText = "";
+    document.getElementById("output").innerHTML = "";
+    document.getElementById("user-gui-body").innerHTML = "";
 }
 
 // ===================
@@ -203,7 +509,8 @@ function dragElement(elmnt, headerId) {
     function dragMouseDown(e) {
         e.preventDefault();
         pos3 = e.clientX; pos4 = e.clientY;
-        document.onmouseup = closeDragElement; document.onmousemove = elementDrag;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
     }
     function elementDrag(e) {
         e.preventDefault();
@@ -212,9 +519,13 @@ function dragElement(elmnt, headerId) {
         elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
         elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
     }
-    function closeDragElement() { document.onmouseup = null; document.onmousemove = null; }
+    function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
 }
 dragElement(document.getElementById("help-modal"), "help-header");
+dragElement(document.getElementById("settings-modal"), "settings-header");
 dragElement(document.getElementById("user-gui"), "gui-header");
 
 // ===================
@@ -224,13 +535,78 @@ function toggleHelp() {
     let help = document.getElementById("help-modal");
     help.style.display = help.style.display === "flex" ? "none" : "flex";
 }
+function toggleSettings() {
+    let settings = document.getElementById("settings-modal");
+    settings.style.display = settings.style.display === "flex" ? "none" : "flex";
+}
 function closeGUI() { document.getElementById("user-gui").style.display = "none"; }
 function minimizeGUI() {
     let body = document.getElementById("user-gui-body");
     body.style.display = body.style.display === "none" ? "block" : "none";
 }
 function toggleAI() { document.getElementById("sidebar").classList.toggle("hidden"); }
-function askAI() { document.getElementById("aiOutput").innerText = "Check the ❓ icon for the new updated command list!"; }
+
+// AI Assistant using AiAssistant.js
+function askAI() {
+    const input = document.getElementById('aiInput').value;
+    const output = document.getElementById('aiOutput');
+    if (window.AiAssistant) {
+        output.innerText = window.AiAssistant.ask(input);
+    } else {
+        output.innerText = 'AI Assistant not loaded. Check AiAssistant.js.';
+    }
+}
+
+// ===================
+// SETTINGS FUNCTIONS
+// ===================
+function applyTextColor(color) {
+    document.documentElement.style.setProperty('--text-editor', color);
+    document.getElementById('text-color-preview').style.background = color;
+}
+
+function applyBgColor(color) {
+    document.documentElement.style.setProperty('--bg-main', color);
+    document.body.style.backgroundImage = 'none'; // remove custom image if any
+    document.getElementById('bg-color-preview').style.background = color;
+}
+
+function setCustomBackground(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            document.body.style.backgroundImage = `url('${e.target.result}')`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundColor = 'transparent';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function resetBackground() {
+    document.body.style.backgroundImage = '';
+    document.body.style.backgroundColor = ''; // revert to CSS variable
+    document.getElementById('bg-image-upload').value = '';
+    // Reset select to match current bg color
+    const currentBg = getComputedStyle(document.documentElement).getPropertyValue('--bg-main').trim();
+    document.getElementById('bg-color-select').value = currentBg;
+}
+
+function toggleSyntaxHighlight() {
+    const enabled = document.getElementById('syntax-toggle').checked;
+    const editor = document.getElementById('editor');
+    if (enabled) {
+        editor.style.color = 'var(--text-editor)';
+    } else {
+        editor.style.color = '#cccccc'; // monochrome
+    }
+}
+
+function toggleSpellCheck() {
+    const enabled = document.getElementById('spellcheck-toggle').checked;
+    document.getElementById('editor').spellcheck = enabled;
+}
 
 // ===================
 // FILE SYSTEM & COMPILER
