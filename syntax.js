@@ -1,9 +1,7 @@
 # JLang V4 — Upgraded syntax.js
 
 ```javascript
-// ==========================================
-// JLANG V4 - MASSIVELY UPGRADED ENGINE
-// ==========================================
+// JLANG V3.1 - MASSIVELY UPGRADED ENGINE
 
 window.JLang = (function() {
 
