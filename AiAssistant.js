@@ -14,7 +14,7 @@ window.AiAssistant = (function() {
     { keywords: ['ask', 'input', 'prompt'], response: 'Get user input: ask "What is your name?"' },
     { keywords: ['color', 'style'], response: 'Style UI: set text color "red", set bg color "#000", set font size 20.' },
     { keywords: ['event', 'on click', 'on hover'], response: 'Events: on click button1 => say "clicked", on load => say "ready", on interval 1000 => say "tick".' },
-    { keywords: ['help', 'commands'], response: 'Check the ❓ icon for the full command list!' }
+    { keywords: ['help', 'commands'], response: 'Check the ❓ icon for the full command list!' },
     { keywords: ['Make cool code', 'I want to make cool code'], response: 'Right now my current version cannot support generating code for you.  Please refer to ❓ icon to see all listed commands.' },
     { keywords: ['Nigger'], response: 'We do not use those words okay' }
     
